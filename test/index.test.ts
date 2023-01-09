@@ -69,11 +69,11 @@ test("README example for OAuth app auth", async () => {
   const authentication = await auth({ type: "oauth-app" });
 
   expect(authentication).toMatchInlineSnapshot(`
-    Object {
+    {
       "clientId": "lv1.1234567890abcdef",
       "clientSecret": "1234567890abcdef1234567890abcdef12345678",
       "clientType": "github-app",
-      "headers": Object {
+      "headers": {
         "authorization": "basic bHYxLjEyMzQ1Njc4OTBhYmNkZWY6MTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3OA==",
       },
       "type": "oauth-app",
@@ -232,7 +232,7 @@ test("README example for oauth", async () => {
   });
 
   expect(authentication).toMatchInlineSnapshot(`
-    Object {
+    {
       "clientId": "lv1.1234567890abcdef",
       "clientSecret": "1234567890abcdef1234567890abcdef12345678",
       "clientType": "github-app",
@@ -915,7 +915,6 @@ test("oauth-user web flow", async () => {
       client_secret: "1234567890abcdef1234567890abcdef12345678",
       code: "123456",
       redirect_uri: "https://example.com/login",
-      state: "mystate123",
     });
 
     return true;
@@ -955,7 +954,7 @@ test("oauth-user web flow", async () => {
   });
 
   expect(authentication).toMatchInlineSnapshot(`
-    Object {
+    {
       "clientId": "lv1.1234567890abcdef",
       "clientSecret": "1234567890abcdef1234567890abcdef12345678",
       "clientType": "github-app",
@@ -1034,7 +1033,7 @@ test("oauth-user device flow", async () => {
   });
 
   expect(authentication).toMatchInlineSnapshot(`
-    Object {
+    {
       "clientId": "lv1.1234567890abcdef",
       "clientSecret": "1234567890abcdef1234567890abcdef12345678",
       "clientType": "github-app",
@@ -2344,7 +2343,7 @@ test("Do not intercept auth.hook(request, 'POST https://github.com/login/oauth/a
   });
 });
 
-it("throws helpful error if `appId` is not set properly (#184)", async () => {
+it("throws helpful error if `appId` is not set (#184)", async () => {
   expect(() => {
     createAppAuth({
       // @ts-ignore
@@ -2352,6 +2351,17 @@ it("throws helpful error if `appId` is not set properly (#184)", async () => {
       privateKey: PRIVATE_KEY,
     });
   }).toThrowError("[@octokit/auth-app] appId option is required");
+});
+
+it("throws helpful error if `appId` is not set to a numeric value", async () => {
+  expect(() => {
+    createAppAuth({
+      appId: "not-a-number",
+      privateKey: PRIVATE_KEY,
+    });
+  }).toThrowError(
+    "[@octokit/auth-app] appId option must be a number or numeric string"
+  );
 });
 
 it("throws helpful error if `privateKey` is not set properly (#184)", async () => {
